@@ -40,7 +40,7 @@ mqttc.on_publish = on_publish
 mqttc.username_pw_set("Lennox", password="password")
 mqttc.connect(MQTT_Broker, int(MQTT_Port), int(Keep_Alive_Interval))
 
-# 
+# a comment
 mqttc.loop_start()
 
 mqttc.publish("led/toggle/room1", "7")
