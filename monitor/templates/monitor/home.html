@@ -8,44 +8,55 @@
         width: 35px;
         height: 35px;
         border-radius: 50%;
-        background-color: #e74c3c;
+        background-color: green;
         color: white;
         text-align: center;
         line-height: 50px; /* Center content vertically */
         font-size: 16px;
-
-        border: none; /* Remove button border */
-        outline: none;
       }
     </style>
     <title>Room Control</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <section>
       <h1>Room 1<br />room status</h1>
-
+      <form method="post" id="toggleForm">{%csrf_token%}</form>
       <button class="status"></button><br /><br />
-      <button id="toggle">Toggle</button>
+      <input
+        type="text"
+        value="toggle"
+        name="action"
+        form="toggleForm"
+        hidden
+      />
+      <input type="text" value="1" name="room" form="toggleForm" hidden />
+      <button id="toggle" type="submit" form="toggleForm">Toggle</button>
       <input
         type="text"
         id="toggleInput"
-        name="toggleInput"
+        name="toggleTimes"
         placeholder="Toggle input..."
+        form="toggleForm"
       />
+
       <br />
       <br />
       <button id="switchOn">Switch On</button>
       <button id="switchOff">Switch Off</button>
     </section>
     <section>
-      <h1>Room 1<br />room status</h1>
+      <h1>Room 2<br />room status</h1>
 
       <button class="status"></button><br /><br />
       <button id="toggle">Toggle</button>
       <input
         type="text"
-        id="toggleInput"
-        name="toggleInput"
+        id="toggleInput1"
+        name="toggleInput1"
         placeholder="Toggle input..."
       />
       <br />

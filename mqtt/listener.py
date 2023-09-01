@@ -53,4 +53,4 @@ mqttc.publish("led/switch/room1","0")
 time.sleep(5)
 mqttc.publish("led/switch/room2","0")
 mqttc.on_publish = on_publish
-time.sleep(60)  # Keep the loop running for 60 seconds
+time.sleep(6)  # Keep the loop running for 60 seconds
