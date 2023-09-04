@@ -23,9 +23,13 @@
   </head>
   <body>
     <section>
-      <h1>Room 1<br />room status</h1>
+      <h1>Home Automation</h1>
+      <h3>Toggle a room LED or Switch a room LED</h3>
       <form method="post" id="toggleForm">{%csrf_token%}</form>
       <button class="status"></button><br /><br />
+
+      <h5>Toggle a room LED</h5>
+
       <input
         type="text"
         value="{{ toggle_action}}"
@@ -33,36 +37,66 @@
         form="toggleForm"
         hidden
       />
-      <input type="text" value="1" name="room" form="toggleForm" hidden />
-      <button id="toggle" type="submit" form="toggleForm">Toggle</button>
+      <input
+        type="text"
+        name="room"
+        form="toggleForm"
+        placeholder="Room Number..."
+        required
+      />
       <input
         type="text"
         id="toggleInput"
         name="toggleTimes"
         placeholder="Toggle input..."
         form="toggleForm"
+        required
       />
 
-      <br />
-      <br />
-      <button id="switchOn">Switch On</button>
-      <button id="switchOff">Switch Off</button>
-    </section>
-    <section>
-      <h1>Room 2<br />room status</h1>
+      <button id="toggle" type="submit" form="toggleForm">Toggle</button>
 
-      <button class="status"></button><br /><br />
-      <button id="toggle">Toggle</button>
+      <br />
+      <br />
+      <h5>switch a room LED</h5>
+
+      <form method="post" id="switchForm">{%csrf_token%}</form>
       <input
         type="text"
-        id="toggleInput1"
-        name="toggleInput1"
-        placeholder="Toggle input..."
+        name="room"
+        form="switchForm"
+        placeholder="Room Number..."
+        required
       />
-      <br />
-      <br />
-      <button id="switchOn">Switch On</button>
-      <button id="switchOff">Switch Off</button>
+      <input
+        type="text"
+        value="{{ switch_action}}"
+        name="actionType"
+        form="switchForm"
+        hidden
+      />
+      <button
+        id="switchOn"
+        name="state"
+        value="1"
+        type="submit"
+        form="switchForm"
+      >
+        Switch On
+      </button>
+      <button
+        id="switchOff"
+        name="state"
+        value="0"
+        type="submit"
+        form="switchForm"
+      >
+        Switch Off
+      </button>
     </section>
   </body>
 </html>
+<script>
+  function setSwitchAction(action) {
+    document.querySelector('input[name="switch_action"]').value = action;
+  }
+</script>

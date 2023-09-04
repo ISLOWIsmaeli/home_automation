@@ -4,7 +4,6 @@ from mqtt.middleware import dispatch_led_action, TOGGLE_ACTION_TYPE, SWITCH_ACTI
 
 def home(request: HttpRequest, *args, **kwargs):
     if request.method == "POST":
-        print(request.POST)
         action_type = request.POST.get("actionType")
         if action_type == TOGGLE_ACTION_TYPE:
             payload = {"room": request.POST.get("room"), "times": request.POST.get("toggleTimes")}
@@ -12,6 +11,13 @@ def home(request: HttpRequest, *args, **kwargs):
             if error:
                 return HttpResponse(error)
             else:
-                return HttpResponse("Success")
+                return HttpResponse(f"{action_type} Success")
+        elif action_type == SWITCH_ACTION_TYPE:
+            payload ={"room": request.POST.get("room"), "state":request.POST.get("state")}
+            error = dispatch_led_action(action_type,payload)
+            if error:
+                return HttpResponse(error)
+            else:
+                return HttpResponse(f"{action_type} Success")
     context = {"switch_action":SWITCH_ACTION_TYPE, "toggle_action":TOGGLE_ACTION_TYPE}
     return render(request, "monitor/home.html", context)

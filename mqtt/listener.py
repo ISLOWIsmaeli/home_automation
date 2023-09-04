@@ -9,6 +9,7 @@ TOGGLE_FEEDBACK_TOPIC = "ledToggle/+"
 TOGGLE_TOPIC = "led/toggle/+"
 
 BASE_TOGGLE_PUBLISH_TOPIC = "led/toggle/room{}"
+BASE_SWITCH_PUBLISH_TOPIC = "led/switch/room{}"
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code " + str(rc))
@@ -47,11 +48,11 @@ mqttc.loop_start()
 
 def publish_to_toggle(room:str, times:str):
     mqttc.publish(BASE_TOGGLE_PUBLISH_TOPIC.format(room), times)
-    print("published")
+    print("toggle switching published")
 
-# mqttc.publish("led/switch/room1","1")
-# mqttc.publish("led/switch/room2","1")
-# mqttc.publish("led/switch/room1","0")
-# mqttc.publish("led/switch/room2","0")
-mqttc.on_publish = on_publish
-# time.sleep(6)  # Keep the loop running for 60 seconds
+def publish_to_switch(room:str, state:str):
+    mqttc.publish(BASE_SWITCH_PUBLISH_TOPIC.format(room), state)
+    print("switching on and off published")
+
+
+

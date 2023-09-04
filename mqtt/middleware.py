@@ -1,12 +1,17 @@
-from mqtt.listener import publish_to_toggle
+from mqtt.listener import publish_to_toggle, publish_to_switch
 SWITCH_ACTION_TYPE = "switch"
 TOGGLE_ACTION_TYPE = "toggle"
 
-def validate_toggle_led_data(room, times):
-    if not room or not times:
-        return "Both room and times are required"
-    if not isinstance(room, int) or not isinstance(times, int):
-        return "Both room and times should be integers"
+def validate_data(room, times_or_state):
+    
+    if not isinstance(room, int) or not isinstance(times_or_state, int):
+        return "Both room and times_or_state should be integers"
+    if not room or (not times_or_state and times_or_state != 0):
+        return "Both room and times_or_state are required"
+
+
+def handle_switch_led(room:int,state:int):
+    publish_to_switch(str(room),str(state))
 
 def handle_toggle_led(room:int, times:int):
     publish_to_toggle(str(room), str(times))
@@ -17,7 +22,14 @@ def dispatch_led_action(action_type: str, payload:dict):
     if action_type == TOGGLE_ACTION_TYPE:
         room = int(payload.get("room"))
         times = int(payload.get("times"))
-        error = validate_toggle_led_data(room, times)
+        error = validate_data(room, times)
         if error:
             return error
         handle_toggle_led(room, times)
+    if action_type == SWITCH_ACTION_TYPE:
+        room = int(payload.get("room"))
+        state = int(payload.get("state"))
+        error = validate_data(room,state)
+        if error:
+            return error
+        handle_switch_led(room,state)
