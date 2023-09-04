@@ -4,15 +4,17 @@ import time
 MQTT_Broker = "broker.hivemq.com"
 MQTT_Port = 1883
 Keep_Alive_Interval = 45
-MQTT_Topic = "led/switch/+"
-MQTT_Topic1 = "ledToggle/+"
-MQTT_Topic2 = "led/toggle/+"
+SWITCH_TOPIC = "led/switch/+"
+TOGGLE_FEEDBACK_TOPIC = "ledToggle/+"
+TOGGLE_TOPIC = "led/toggle/+"
+
+BASE_TOGGLE_PUBLISH_TOPIC = "led/toggle/room{}"
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code " + str(rc))
-    mqttc.subscribe(MQTT_Topic, 0)
-    mqttc.subscribe(MQTT_Topic1, 0)
-    mqttc.subscribe(MQTT_Topic2,0)
+    mqttc.subscribe(SWITCH_TOPIC, 0)
+    mqttc.subscribe(TOGGLE_FEEDBACK_TOPIC, 0)
+    mqttc.subscribe(TOGGLE_TOPIC,0)
 
 def on_message(client, userdata, msg):
     print("Topic: " + str(msg.topic))
@@ -43,14 +45,13 @@ mqttc.connect(MQTT_Broker, int(MQTT_Port), int(Keep_Alive_Interval))
 # a comment
 mqttc.loop_start()
 
-mqttc.publish("led/toggle/room1", "7")
-mqttc.publish("led/toggle/room2", "7")
-mqttc.publish("led/switch/room1","1")
-time.sleep(20)
-mqttc.publish("led/switch/room2","1")
-time.sleep(5)
-mqttc.publish("led/switch/room1","0")
-time.sleep(5)
-mqttc.publish("led/switch/room2","0")
+def publish_to_toggle(room:str, times:str):
+    mqttc.publish(BASE_TOGGLE_PUBLISH_TOPIC.format(room), times)
+    print("published")
+
+# mqttc.publish("led/switch/room1","1")
+# mqttc.publish("led/switch/room2","1")
+# mqttc.publish("led/switch/room1","0")
+# mqttc.publish("led/switch/room2","0")
 mqttc.on_publish = on_publish
-time.sleep(6)  # Keep the loop running for 60 seconds
+# time.sleep(6)  # Keep the loop running for 60 seconds
