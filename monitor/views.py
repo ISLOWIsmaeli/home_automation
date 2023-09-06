@@ -19,5 +19,5 @@ def home(request: HttpRequest, *args, **kwargs):
                 return HttpResponse(error)
             else:
                 return HttpResponse(f"{action_type} Success")
-    context = {"switch_action":SWITCH_ACTION_TYPE, "toggle_action":TOGGLE_ACTION_TYPE}
+    context = {"switch_action":SWITCH_ACTION_TYPE, "toggle_action":TOGGLE_ACTION_TYPE, "rooms":[1,2]}
     return render(request, "monitor/home.html", context)

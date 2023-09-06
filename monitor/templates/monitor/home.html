@@ -37,6 +37,7 @@
         form="toggleForm"
         hidden
       />
+      {% comment %}
       <input
         type="text"
         name="room"
@@ -44,6 +45,20 @@
         placeholder="Room Number..."
         required
       />
+      {% endcomment %}
+      <select
+        name="room"
+        id="room"
+        form="toggleForm"
+        placeholder="Room Number..."
+        required
+      >
+        <option value="invalid">Select Room</option>
+
+        {%for r in rooms %}
+        <option value="{{r}}">{{r}}</option>
+        {% endfor %}
+      </select>
       <input
         type="text"
         id="toggleInput"
@@ -60,13 +75,12 @@
       <h5>switch a room LED</h5>
 
       <form method="post" id="switchForm">{%csrf_token%}</form>
-      <input
-        type="text"
-        name="room"
-        form="switchForm"
-        placeholder="Room Number..."
-        required
-      />
+      <select name="room" id="room" form="switchForm" required>
+        <option value="invalid">Select Room</option>
+        {%for r in rooms %}
+        <option value="{{r}}">{{r}}</option>
+        {% endfor %}
+      </select>
       <input
         type="text"
         value="{{ switch_action}}"
