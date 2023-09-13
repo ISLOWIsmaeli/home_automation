@@ -106,11 +106,31 @@
       >
         Switch Off
       </button>
+      <br />
+
+      <button id="toggling-feed">TOGGLE FEED</button>
+
+      <br />
+      <h5>LED STATUSES</h5>
+      <ul>
+        {%for room, status in led_statuses.items %}
+        <li>Room {{room}} LED Status: {{ status}}</li>
+        {%endfor%}
+      </ul>
     </section>
+    <script>
+      $(document).ready(function () {
+        $("#toggling-feed").click(function () {
+          $.ajax({
+            type: "GET",
+            url: "/",
+            dataType: "json",
+            success: function (data) {
+              $("#random-number").text("Random Number: " + data.random_number);
+            },
+          });
+        });
+      });
+    </script>
   </body>
 </html>
-<script>
-  function setSwitchAction(action) {
-    document.querySelector('input[name="switch_action"]').value = action;
-  }
-</script>
