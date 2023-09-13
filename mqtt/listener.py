@@ -48,7 +48,7 @@ def on_message(client, userdata, msg):
         status = payload[-1]
         LED_STATUS[room] = status
         print(LED_STATUS)
-        print("Payload: " + str(msg.payload))
+        print("Payload in if: " + str(msg.payload))
 
 
 def on_subscribe(client, userdata, mid, granted_qos):

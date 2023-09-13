@@ -115,21 +115,48 @@
       <ul>
         {%for room, status in led_statuses.items %}
         <li>Room {{room}} LED Status: {{ status}}</li>
-        {%endfor%}
+        {% comment %}
+        <li id="toggling-statuses"></li>
+        {% endcomment %} {%endfor%}
       </ul>
+      <p id="led-statuses"></p>
     </section>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+      integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
     <script>
       $(document).ready(function () {
-        $("#toggling-feed").click(function () {
+        function updateLEDStatuses() {
           $.ajax({
             type: "GET",
-            url: "/",
+            url: "{% url 'ajax_response' %}",
             dataType: "json",
             success: function (data) {
-              $("#random-number").text("Random Number: " + data.random_number);
+              $("#led-statuses").empty();
+              for (const room in data.led_statuses) {
+                let status = data.led_statuses[room];
+                // const status = data.led_statuses[room];
+                if (status === "0") {
+                  status = "finished toggling";
+                }
+                if (status === "1") {
+                  status = "starting to toggle";
+                }
+                $("#led-statuses").append(
+                  `<li>Room ${room} LED Status: ${status}</li>`
+                );
+              }
+            },
+            error: function (error) {
+              console.error(error);
             },
           });
-        });
+        }
+        updateLEDStatuses();
+        setInterval(updateLEDStatuses, 100);
       });
     </script>
   </body>

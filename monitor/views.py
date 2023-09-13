@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse, HttpRequest, JsonResponse
 from mqtt.middleware import (
     dispatch_led_action,
     TOGGLE_ACTION_TYPE,
@@ -28,8 +28,11 @@ def home(request: HttpRequest, *args, **kwargs):
             else:
                 wait_for_response = True
                 available_rooms_response = set()
+                print(f"I am the initial available rooms response: {available_rooms_response}")
                 while wait_for_response:
-                    if LED_STATUS != {}:
+                    print(f"I am LED_STATUS before is LED_STATUS != empty: {LED_STATUS}")
+                    if LED_STATUS != {}:#while LED_STATUS has something
+                        print(f"I am LED_STATUS updating keys to available_rooms_response: {LED_STATUS}")
                         available_rooms_response.update(LED_STATUS.keys())
                     if available_rooms_response == TOGGLE_REQUESTED_ROOMS:
                         wait_for_response = False
@@ -48,3 +51,8 @@ def home(request: HttpRequest, *args, **kwargs):
 
 
 # def toggle_feedback(request: HttpRequest, *args, **kwargs):
+def display_led_status(request: HttpRequest,*args,**kwargs):
+    
+    led_statuses = LED_STATUS
+    return JsonResponse({"led_statuses": led_statuses})
+
