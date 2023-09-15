@@ -1,8 +1,6 @@
 import paho.mqtt.client as mqtt
-import time
 
 LED_STATUS = {}
-TOGGLE_REQUESTED_ROOMS = set()
 MQTT_Broker = "broker.hivemq.com"
 MQTT_Port = 1883
 Keep_Alive_Interval = 45
@@ -28,7 +26,6 @@ def decode_toggle_led_feedback(led_status: dict):
     for room, status in led_status.items():
         decoded_status = TOGGLE_CODE_STATUS_MAP.get(status)
         led_status[room] = decoded_status
-        print(f"I am the returned led_status{led_status}")
     return led_status
 
 
@@ -78,7 +75,6 @@ mqttc.loop_start()
 
 
 def publish_to_toggle(room: str, times: str):
-    TOGGLE_REQUESTED_ROOMS.add(room)
     mqttc.publish(BASE_TOGGLE_PUBLISH_TOPIC.format(room), times)
 
 

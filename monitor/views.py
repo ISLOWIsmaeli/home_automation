@@ -6,7 +6,7 @@ from mqtt.middleware import (
     SWITCH_ACTION_TYPE,
     LED_STATUS,
 )
-from mqtt.listener import decode_toggle_led_feedback, TOGGLE_REQUESTED_ROOMS
+from mqtt.listener import decode_toggle_led_feedback
 
 
 def home(request: HttpRequest, *args, **kwargs):
@@ -25,17 +25,6 @@ def home(request: HttpRequest, *args, **kwargs):
             error = dispatch_led_action(action_type, payload)
             if error:
                 return HttpResponse(error)
-            else:
-                wait_for_response = True
-                available_rooms_response = set()
-                print(f"I am the initial available rooms response: {available_rooms_response}")
-                while wait_for_response:
-                    print(f"I am LED_STATUS before is LED_STATUS != empty: {LED_STATUS}")
-                    if LED_STATUS != {}:#while LED_STATUS has something
-                        print(f"I am LED_STATUS updating keys to available_rooms_response: {LED_STATUS}")
-                        available_rooms_response.update(LED_STATUS.keys())
-                    if available_rooms_response == TOGGLE_REQUESTED_ROOMS:
-                        wait_for_response = False
         elif action_type == SWITCH_ACTION_TYPE:
             payload = {
                 "room": request.POST.get("room"),
@@ -46,13 +35,11 @@ def home(request: HttpRequest, *args, **kwargs):
                 return HttpResponse(error)
             else:
                 return HttpResponse(f"{action_type} Success")
-    context["led_statuses"] = decode_toggle_led_feedback(LED_STATUS)
+    # context["led_statuses"] = decode_toggle_led_feedback(LED_STATUS)
     return render(request, "monitor/home.html", context)
 
 
 # def toggle_feedback(request: HttpRequest, *args, **kwargs):
-def display_led_status(request: HttpRequest,*args,**kwargs):
-    
+def display_led_status(request: HttpRequest, *args, **kwargs):
     led_statuses = LED_STATUS
-    return JsonResponse({"led_statuses": led_statuses})
-
+    return JsonResponse({"led_statuses": decode_toggle_led_feedback(led_statuses)})
