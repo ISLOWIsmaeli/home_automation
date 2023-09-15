@@ -108,17 +108,20 @@
       </button>
       <br />
 
-      <button id="toggling-feed">TOGGLE FEED</button>
+      {% comment %} <button id="toggling-feed">TOGGLE FEED</button> {%
+      endcomment %}
 
       <br />
       <h5>LED STATUSES</h5>
+      {% comment %}
       <ul>
         {%for room, status in led_statuses.items %}
         <li>Room {{room}} LED Status: {{ status}}</li>
         {% comment %}
         <li id="toggling-statuses"></li>
-        {% endcomment %} {%endfor%}
+        } {%endfor%}
       </ul>
+      {% endcomment %}
       <p id="led-statuses"></p>
     </section>
     <script
@@ -127,6 +130,7 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
+
     <script>
       $(document).ready(function () {
         function updateLEDStatuses() {
@@ -139,14 +143,14 @@
               for (const room in data.led_statuses) {
                 let status = data.led_statuses[room];
                 // const status = data.led_statuses[room];
-                if (status === "0") {
+                if (status == "0") {
                   status = "finished toggling";
                 }
-                if (status === "1") {
+                if (status == "1") {
                   status = "starting to toggle";
                 }
                 $("#led-statuses").append(
-                  `<li>Room ${room} LED Status: ${status}</li>`
+                  `<p>Room ${room} LED Status: ${status}</p>`
                 );
               }
             },
@@ -156,7 +160,7 @@
           });
         }
         updateLEDStatuses();
-        setInterval(updateLEDStatuses, 100);
+        setInterval(updateLEDStatuses, 10);
       });
     </script>
   </body>

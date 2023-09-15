@@ -15,6 +15,7 @@ BASE_SWITCH_PUBLISH_TOPIC = "led/switch/room{}"
 
 START_TOGGLE_STATUS = "starting to toggle"
 END_TOGGLE_STATUS = "finished toggling"
+
 TOGGLE_CODE_STATUS_MAP = {
     "1": START_TOGGLE_STATUS,
     "0": END_TOGGLE_STATUS,
@@ -27,6 +28,7 @@ def decode_toggle_led_feedback(led_status: dict):
     for room, status in led_status.items():
         decoded_status = TOGGLE_CODE_STATUS_MAP.get(status)
         led_status[room] = decoded_status
+        print(f"I am the returned led_status{led_status}")
     return led_status
 
 
