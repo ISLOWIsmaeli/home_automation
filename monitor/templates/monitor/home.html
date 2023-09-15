@@ -107,21 +107,7 @@
         Switch Off
       </button>
       <br />
-
-      {% comment %} <button id="toggling-feed">TOGGLE FEED</button> {%
-      endcomment %}
-
-      <br />
       <h5>LED STATUSES</h5>
-      {% comment %}
-      <ul>
-        {%for room, status in led_statuses.items %}
-        <li>Room {{room}} LED Status: {{ status}}</li>
-        {% comment %}
-        <li id="toggling-statuses"></li>
-        } {%endfor%}
-      </ul>
-      {% endcomment %}
       <p id="led-statuses"></p>
     </section>
     <script
@@ -142,13 +128,6 @@
               $("#led-statuses").empty();
               for (const room in data.led_statuses) {
                 let status = data.led_statuses[room];
-                // const status = data.led_statuses[room];
-                if (status == "0") {
-                  status = "finished toggling";
-                }
-                if (status == "1") {
-                  status = "starting to toggle";
-                }
                 $("#led-statuses").append(
                   `<p>Room ${room} LED Status: ${status}</p>`
                 );
