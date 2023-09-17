@@ -21,12 +21,22 @@
       rel="stylesheet"
     />
   </head>
+  <nav class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand">Home Automation </a>
+    <form class="form-inline">
+      <input
+        class="form-control mr-sm-2"
+        type="search"
+        placeholder="Search"
+        aria-label="Search"
+      />
+    </form>
+  </nav>
   <body>
-    <section>
-      <h1>Home Automation</h1>
-      <h3>Toggle a room LED or Switch a room LED</h3>
+    <section align="left">
+      <h1>Toggle A Room LED or Switch A Room LED</h1>
       <form method="post" id="toggleForm">{%csrf_token%}</form>
-      <button class="status"></button><br /><br />
+      <br /><br />
 
       <h5>Toggle a room LED</h5>
 
@@ -46,41 +56,59 @@
         required
       />
       {% endcomment %}
-      <select
-        name="room"
-        id="room"
+
+      <div class="row">
+        <div class="col-4">
+          <!-- Adjust the 'col-md-*' class as needed -->
+          <select
+            name="room"
+            id="room"
+            form="toggleForm"
+            class="form-control"
+            required
+          >
+            <option value="invalid">Select Room</option>
+            {% for r in rooms %}
+            <option value="{{ r }}">{{ r }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-3">
+          <!-- Adjust the 'col-md-*' class as needed -->
+          <input
+            type="text"
+            id="toggleInput"
+            name="toggleTimes"
+            placeholder="Toggle input..."
+            form="toggleForm"
+            class="form-control"
+            required
+          />
+        </div>
+      </div>
+      <br />
+      <button
+        id="toggle"
+        type="submit"
         form="toggleForm"
-        placeholder="Room Number..."
-        required
+        class="btn btn-outline-warning"
       >
-        <option value="invalid">Select Room</option>
-
-        {%for r in rooms %}
-        <option value="{{r}}">{{r}}</option>
-        {% endfor %}
-      </select>
-      <input
-        type="text"
-        id="toggleInput"
-        name="toggleTimes"
-        placeholder="Toggle input..."
-        form="toggleForm"
-        required
-      />
-
-      <button id="toggle" type="submit" form="toggleForm">Toggle</button>
+        Toggle
+      </button>
 
       <br />
       <br />
       <h5>switch a room LED</h5>
 
       <form method="post" id="switchForm">{%csrf_token%}</form>
+
       <select name="room" id="room" form="switchForm" required>
         <option value="invalid">Select Room</option>
         {%for r in rooms %}
         <option value="{{r}}">{{r}}</option>
         {% endfor %}
       </select>
+
       <input
         type="text"
         value="{{ switch_action}}"
@@ -88,12 +116,14 @@
         form="switchForm"
         hidden
       />
+
       <button
         id="switchOn"
         name="state"
         value="1"
         type="submit"
         form="switchForm"
+        class="btn btn-outline-success"
       >
         Switch On
       </button>
@@ -103,12 +133,42 @@
         value="0"
         type="submit"
         form="switchForm"
+        class="btn btn-outline-danger"
       >
         Switch Off
       </button>
       <br />
       <h5>LED STATUSES</h5>
       <p id="led-statuses"></p>
+    </section>
+    <section>
+      <table border="2">
+        <tr align="center">
+          <td>LED</td>
+          <td>FUNCTION</td>
+          <td>STATE</td>
+        </tr>
+        <tr align="center">
+          <td>led1</td>
+          <td>toggle</td>
+          <td>TOGGLE STATUS</td>
+        </tr>
+        <tr align="center">
+          <td>led2</td>
+          <td>toggle</td>
+          <td>TOGGLE STATUS</td>
+        </tr>
+        <tr align="center">
+          <td>led1</td>
+          <td>switch</td>
+          <td>SWITCH STATUS</td>
+        </tr>
+        <tr align="center">
+          <td>led2</td>
+          <td>switch</td>
+          <td>SWITCH STATUS</td>
+        </tr>
+      </table>
     </section>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
@@ -139,7 +199,7 @@
           });
         }
         updateLEDStatuses();
-        setInterval(updateLEDStatuses, 10);
+        setInterval(updateLEDStatuses, 100000);
       });
     </script>
   </body>

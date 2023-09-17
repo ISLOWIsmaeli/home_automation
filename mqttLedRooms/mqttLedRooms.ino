@@ -2,6 +2,8 @@
 #include <PubSubClient.h>
 
 const int ledPin[]={D0,D1,D2,D3,D4,D5,D6};
+const int delayTime=500;
+
 const char *ssid = "Kembo Home"; 
 const char *password = "KemboHome"; 
 
@@ -96,9 +98,9 @@ void togglePublishLedFeedback(int times,int roomNo){
   client.publish(toggleFeedbackTopic, toggleMessage);
   for(int i=0;i<times;i++){
     digitalWrite(ledPin[roomNo], HIGH); 
-    delay(500); 
+    delay(delayTime); 
     digitalWrite(ledPin[roomNo], LOW);
-    delay(500); 
+    delay(delayTime); 
   }
   client.publish(toggleFeedbackTopic,endingMessage);
 }
