@@ -190,6 +190,40 @@
     </section>
 
     <script>
+      let animationInterval = null;
+      function animateStates(startAnimation, room) {
+        const ledStatusElements = document.getElementsByClassName(
+          "toggle-status-display"
+        );
+        let isGreen = true;
+        function toggleIndicator(s) {
+          if (isGreen) {
+            s.style.backgroundColor = "red";
+          } else {
+            s.style.backgroundColor = "transparent";
+          }
+        }
+        function toggleColor(roomLed) {
+          const ledStatus = ledStatusElements[roomLed - 1];
+          toggleIndicator(ledStatus);
+
+          isGreen = !isGreen;
+        }
+        // setInterval(toggleColor, 250);
+        if (startAnimation) {
+          if (!animationInterval) {
+            animationInterval = setInterval(function () {
+              toggleColor(room);
+            }, 250);
+          }
+        } else {
+          if (animationInterval) {
+            clearInterval(animationInterval);
+            animationInterval = null;
+          }
+        }
+      }
+
       $(document).ready(function () {
         function updateLEDStatuses() {
           $.ajax({
@@ -203,8 +237,10 @@
                 let status = data.led_statuses[room];
                 if (room == "1") {
                   if (status == "starting to toggle") {
+                    animateStates(true, parseInt(room, 10));
                     $("#led-status-1").css("color", "green");
                   } else if (status == "finished toggling") {
+                    animateStates(false, parseInt(room, 10));
                     $("#led-status-1").css("color", "red");
                   }
                   $("#led-status-1").append(
@@ -212,8 +248,10 @@
                   );
                 } else if (room == "2") {
                   if (status == "starting to toggle") {
+                    animateStates(true, parseInt(room, 10));
                     $("#led-status-2").css("color", "green");
                   } else if (status == "finished toggling") {
+                    animateStates(false, parseInt(room, 10));
                     $("#led-status-2").css("color", "red");
                   }
                   $("#led-status-2").append(
@@ -231,25 +269,6 @@
         setInterval(updateLEDStatuses, 1000);
       });
     </script>
-    <script>
-      const ledStatusElements = document.getElementsByClassName(
-        "toggle-status-display"
-      );
-      let isGreen = true;
-
-      function toggleColor() {
-        for (let i = 0; i < ledStatusElements.length; i++) {
-          const ledStatus = ledStatusElements[i];
-          if (isGreen) {
-            ledStatus.style.backgroundColor = "red";
-          } else {
-            ledStatus.style.backgroundColor = "green";
-          }
-        }
-        isGreen = !isGreen;
-      }
-
-      setInterval(toggleColor, 500);
-    </script>
+    <script></script>
   </body>
 </html>
