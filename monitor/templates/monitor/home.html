@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
-      #toggle-status-display {
+      .toggle-status-display {
         width: 30px;
         height: 30px;
         border: 1px solid red;
@@ -144,12 +144,13 @@
           </button>
         </div>
       </div>
-      <button>background</button>
 
       <br />
       <h5>LED STATUSES</h5>
-      <p id="led-status"></p>
+      <p id="led-status-1"></p>
+      <p id="led-status-2"></p>
     </section>
+
     <section>
       <table class="table table-bordered" border="2">
         <tr align="center">
@@ -161,14 +162,14 @@
           <td>led1</td>
           <td>toggle</td>
           <td>
-            <div id="toggle-status-display"></div>
+            <div class="toggle-status-display"></div>
           </td>
         </tr>
         <tr align="center">
           <td>led2</td>
           <td>toggle</td>
           <td>
-            <div id="toggle-status-display"></div>
+            <div class="toggle-status-display"></div>
           </td>
         </tr>
         <tr align="center">
@@ -196,12 +197,29 @@
             url: "{% url 'ajax_response' %}",
             dataType: "json",
             success: function (data) {
-              $("#led-status").empty();
+              $("#led-status-1").empty();
+              $("#led-status-2").empty();
               for (const room in data.led_statuses) {
                 let status = data.led_statuses[room];
-                $("#led-status").append(
-                  `<p>Room ${room} LED Status: ${status}</p>`
-                );
+                if (room == "1") {
+                  if (status == "starting to toggle") {
+                    $("#led-status-1").css("color", "green");
+                  } else if (status == "finished toggling") {
+                    $("#led-status-1").css("color", "red");
+                  }
+                  $("#led-status-1").append(
+                    `<p>Room ${room} LED Status: ${status}</p>`
+                  );
+                } else if (room == "2") {
+                  if (status == "starting to toggle") {
+                    $("#led-status-2").css("color", "green");
+                  } else if (status == "finished toggling") {
+                    $("#led-status-2").css("color", "red");
+                  }
+                  $("#led-status-2").append(
+                    `<p>Room ${room} LED Status: ${status}</p>`
+                  );
+                }
               }
             },
             error: function (error) {
@@ -212,6 +230,26 @@
         updateLEDStatuses();
         setInterval(updateLEDStatuses, 1000);
       });
+    </script>
+    <script>
+      const ledStatusElements = document.getElementsByClassName(
+        "toggle-status-display"
+      );
+      let isGreen = true;
+
+      function toggleColor() {
+        for (let i = 0; i < ledStatusElements.length; i++) {
+          const ledStatus = ledStatusElements[i];
+          if (isGreen) {
+            ledStatus.style.backgroundColor = "red";
+          } else {
+            ledStatus.style.backgroundColor = "green";
+          }
+        }
+        isGreen = !isGreen;
+      }
+
+      setInterval(toggleColor, 500);
     </script>
   </body>
 </html>
