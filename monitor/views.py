@@ -42,4 +42,5 @@ def home(request: HttpRequest, *args, **kwargs):
 # def toggle_feedback(request: HttpRequest, *args, **kwargs):
 def display_led_status(request: HttpRequest, *args, **kwargs):
     led_statuses = LED_STATUS
+    print(led_statuses)
     return JsonResponse({"led_statuses": decode_toggle_led_feedback(led_statuses)})
