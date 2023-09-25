@@ -10,11 +10,11 @@
         border: 1px solid red;
         transition: background-color 0.5s;
       }
-      #switch-status-display {
+      .switch-status-display {
         width: 30px;
         height: 30px;
         border: 1px solid black;
-        transition: background-color 0.5s;
+        transition: background-color 0.05s;
       }
     </style>
     <script
@@ -149,6 +149,8 @@
       <h5>LED STATUSES</h5>
       <p id="led-status-1"></p>
       <p id="led-status-2"></p>
+      <p id="led-status-3"></p>
+      <p id="led-status-4"></p>
     </section>
 
     <section>
@@ -176,14 +178,14 @@
           <td>led1</td>
           <td>switch</td>
           <td>
-            <div id="switch-status-display"></div>
+            <div class="switch-status-display"></div>
           </td>
         </tr>
         <tr align="center">
           <td>led2</td>
           <td>switch</td>
           <td>
-            <div id="switch-status-display"></div>
+            <div class="switch-status-display"></div>
           </td>
         </tr>
       </table>
@@ -191,11 +193,14 @@
 
     <script>
       let animationInterval = null;
+
       function animateStates(startAnimation, room) {
         const ledStatusElements = document.getElementsByClassName(
           "toggle-status-display"
         );
+
         let isGreen = true;
+        //declared another function within the animateStates function
         function toggleIndicator(s) {
           if (isGreen) {
             s.style.backgroundColor = "red";
@@ -203,6 +208,7 @@
             s.style.backgroundColor = "transparent";
           }
         }
+
         function toggleColor(roomLed) {
           const ledStatus = ledStatusElements[roomLed - 1];
           toggleIndicator(ledStatus);
@@ -224,6 +230,19 @@
         }
       }
 
+      function switchOnOff(onOff, room) {
+        console.log("I have entered swithOnOff");
+        const ledStatusElements = document.getElementsByClassName(
+          "switch-status-display"
+        );
+        let ledStatus = ledStatusElements[room - 1];
+        if (onOff) {
+          ledStatus.style.backgroundColor = "red";
+        } else if (!onOff) {
+          ledStatus.style.backgroundColor = "transparent";
+        }
+      }
+
       $(document).ready(function () {
         function updateLEDStatuses() {
           $.ajax({
@@ -233,8 +252,11 @@
             success: function (data) {
               $("#led-status-1").empty();
               $("#led-status-2").empty();
-              for (const room in data.led_statuses) {
-                let status = data.led_statuses[room];
+              $("#led-status-3").empty();
+              $("#led-status-4").empty();
+
+              for (const room in data.led_toggle_statuses) {
+                let status = data.led_toggle_statuses[room];
                 if (room == "1") {
                   if (status == "starting to toggle") {
                     animateStates(true, parseInt(room, 10));
@@ -255,6 +277,39 @@
                     $("#led-status-2").css("color", "red");
                   }
                   $("#led-status-2").append(
+                    `<p>Room ${room} LED Status: ${status}</p>`
+                  );
+                }
+              }
+              for (const room in data.led_switch_statuses) {
+                let status = data.led_switch_statuses[room];
+                //hardcoded part of frontend
+                if (status == "1") {
+                  status = "ON";
+                } else if (status == "0") {
+                  status = "OFF";
+                }
+                //hard coded part of frontend
+                if (room == "1") {
+                  if (status == "ON") {
+                    switchOnOff(true, parseInt(room, 10));
+                    $("#led-status-3").css("color", "green");
+                  } else if (status == "OFF") {
+                    switchOnOff(false, parseInt(room, 10));
+                    $("#led-status-3").css("color", "red");
+                  }
+                  $("#led-status-3").append(
+                    `<p>Room ${room} LED Status: ${status}</p>`
+                  );
+                } else if (room == "2") {
+                  if (status == "ON") {
+                    switchOnOff(true, parseInt(room, 10));
+                    $("#led-status-4").css("color", "green");
+                  } else if (status == "OFF") {
+                    switchOnOff(false, parseInt(room, 10));
+                    $("#led-status-4").css("color", "red");
+                  }
+                  $("#led-status-4").append(
                     `<p>Room ${room} LED Status: ${status}</p>`
                   );
                 }

@@ -1,7 +1,8 @@
 from mqtt.listener import (
     publish_to_toggle,
     publish_to_switch,
-    LED_STATUS,
+    LED_TOGGLE_STATUS,
+    LED_SWITCH_STATUS,
     mqttc,
     TOGGLE_FEEDBACK_TOPIC,
 )
