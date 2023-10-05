@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt
 
 LED_TOGGLE_STATUS = {}
-LED_SWITCH_STATUS ={}
+LED_SWITCH_STATUS = {}
 MQTT_Broker = "broker.hivemq.com"
 MQTT_Port = 1883
 Keep_Alive_Interval = 45
@@ -15,7 +15,7 @@ BASE_TOGGLE_PUBLISH_TOPIC = "led/toggle/room{}"
 BASE_SWITCH_PUBLISH_TOPIC = "led/switch/room{}"
 
 START_TOGGLE_STATUS = "starting to toggle"
-END_TOGGLE_STATUS = "finished toggling"
+END_TOGGLE_STATUS = "finished/not toggling"
 
 SWITCH_ON = "ON"
 SWITCH_OFF = "OFF"
@@ -27,37 +27,40 @@ TOGGLE_CODE_STATUS_MAP = {
     START_TOGGLE_STATUS: START_TOGGLE_STATUS,
 }
 
-SWITCH_CODE_STATUS_MAP ={
-    "1":SWITCH_ON,
-    "0":SWITCH_OFF,
-    SWITCH_ON:SWITCH_ON,
-    SWITCH_OFF:SWITCH_OFF,
+SWITCH_CODE_STATUS_MAP = {
+    "1": SWITCH_ON,
+    "0": SWITCH_OFF,
+    SWITCH_ON: SWITCH_ON,
+    SWITCH_OFF: SWITCH_OFF,
 }
+
 
 def decode_toggle_led_feedback(led_status: dict):
     for room, status in led_status.items():
-        print(f"I am room before decoding: {room}")
-        print(f"I am status before decoding: {status}")
         decoded_status = TOGGLE_CODE_STATUS_MAP.get(status)
-        print(f"I am room after decoding: {room}")
-        print(f"I am status after decoding: {status}")
         led_status[room] = decoded_status
     return led_status
+
+
 # the following function is not working as expected thus it has been hardcoded in the javascript on front end
-def decode_switch_led_feedback(led_status:dict):
+def decode_switch_led_feedback(led_status: dict):
     for room, status in led_status.items():
-        
         decoded_status = SWITCH_CODE_STATUS_MAP.get(status)
-        
-        led_status[room] =decoded_status
+        led_status[room] = decoded_status
         return led_status
+
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code " + str(rc))
-    mqttc.subscribe(SWITCH_FEEDBACK_TOPIC,0)
+    mqttc.subscribe(SWITCH_FEEDBACK_TOPIC, 0)
     mqttc.subscribe(SWITCH_TOPIC, 0)
     mqttc.subscribe(TOGGLE_FEEDBACK_TOPIC, 0)
     mqttc.subscribe(TOGGLE_TOPIC, 0)
+    # this is upon re-connection not first time connection
+    for room, status in LED_TOGGLE_STATUS.items():
+        mqttc.publish(BASE_TOGGLE_PUBLISH_TOPIC.format(room), status)
+    for room, status in LED_SWITCH_STATUS.items():
+        mqttc.publish(BASE_SWITCH_PUBLISH_TOPIC.format(room), status)
 
 
 def on_message(client, userdata, msg):
@@ -76,11 +79,8 @@ def on_message(client, userdata, msg):
         payload = msg.payload.decode("utf-8")
         room = payload[:-1]
         status = payload[-1]
-        LED_SWITCH_STATUS[room] =status
-        u=decode_switch_led_feedback(LED_SWITCH_STATUS)
-        print(f"Switch status: {u}")
+        LED_SWITCH_STATUS[room] = status
         print("Payload in elif: " + str(msg.payload))
-    
 
 
 def on_subscribe(client, userdata, mid, granted_qos):

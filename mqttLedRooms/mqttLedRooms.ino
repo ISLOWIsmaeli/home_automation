@@ -83,6 +83,14 @@ void reconnectBroker(){
       Serial.printf("The client %s connects to the public mqtt broker\n", client_id.c_str());
       if (client.connect(client_id.c_str(), mqttUsername, mqttPassword)) {
           Serial.println("Public hiveMQ mqtt broker connected");
+          for(int i=0 ;i<2;i++){
+            char switchMessage[100];
+            char toggleMessage[100];
+            sprintf(switchMessage,"%d%d",i+1,digitalRead(ledPin[i]));
+            sprintf(toggleMessage,"%d%d",i+1,digitalRead(ledPin[i]));
+            client.publish(switchFeedbackTopic,switchMessage);
+            client.publish(toggleFeedbackTopic,toggleMessage);
+          }
       } else {
           Serial.print("failed with state ");
           Serial.print(client.state());
