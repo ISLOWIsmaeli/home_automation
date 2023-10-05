@@ -198,11 +198,11 @@
         const ledStatusElements = document.getElementsByClassName(
           "toggle-status-display"
         );
-
-        let isGreen = true;
+        console.log("I have entered this function");
+        let isRed = true;
         //declared another function within the animateStates function
         function toggleIndicator(s) {
-          if (isGreen) {
+          if (isRed) {
             s.style.backgroundColor = "red";
           } else {
             s.style.backgroundColor = "transparent";
@@ -213,7 +213,7 @@
           const ledStatus = ledStatusElements[roomLed - 1];
           toggleIndicator(ledStatus);
 
-          isGreen = !isGreen;
+          isRed = !isRed;
         }
         // setInterval(toggleColor, 250);
         if (startAnimation) {
@@ -231,7 +231,7 @@
       }
 
       function switchOnOff(onOff, room) {
-        console.log("I have entered swithOnOff");
+        // console.log("I have entered swithOnOff");
         const ledStatusElements = document.getElementsByClassName(
           "switch-status-display"
         );
@@ -261,7 +261,7 @@
                   if (status == "starting to toggle") {
                     animateStates(true, parseInt(room, 10));
                     $("#led-status-1").css("color", "green");
-                  } else if (status == "finished toggling") {
+                  } else if (status == "finished/not toggling") {
                     animateStates(false, parseInt(room, 10));
                     $("#led-status-1").css("color", "red");
                   }
@@ -272,7 +272,7 @@
                   if (status == "starting to toggle") {
                     animateStates(true, parseInt(room, 10));
                     $("#led-status-2").css("color", "green");
-                  } else if (status == "finished toggling") {
+                  } else if (status == "finished/not toggling") {
                     animateStates(false, parseInt(room, 10));
                     $("#led-status-2").css("color", "red");
                   }

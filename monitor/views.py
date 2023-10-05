@@ -4,9 +4,13 @@ from mqtt.middleware import (
     dispatch_led_action,
     TOGGLE_ACTION_TYPE,
     SWITCH_ACTION_TYPE,
-    
 )
-from mqtt.listener import (decode_toggle_led_feedback, decode_switch_led_feedback,LED_SWITCH_STATUS,LED_TOGGLE_STATUS)
+from mqtt.listener import (
+    decode_toggle_led_feedback,
+    decode_switch_led_feedback,
+    LED_SWITCH_STATUS,
+    LED_TOGGLE_STATUS,
+)
 
 
 def home(request: HttpRequest, *args, **kwargs):
@@ -45,5 +49,9 @@ def display_led_status(request: HttpRequest, *args, **kwargs):
     led_switch_statuses = LED_SWITCH_STATUS
     print(led_switch_statuses)
     print(decode_switch_led_feedback(led_switch_statuses))
-    return JsonResponse({"led_toggle_statuses": decode_toggle_led_feedback(led_toggle_statuses),"led_switch_statuses": decode_switch_led_feedback(led_switch_statuses)})
-
+    return JsonResponse(
+        {
+            "led_toggle_statuses": decode_toggle_led_feedback(led_toggle_statuses),
+            "led_switch_statuses": decode_switch_led_feedback(led_switch_statuses),
+        }
+    )
