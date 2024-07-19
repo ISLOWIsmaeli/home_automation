@@ -12,7 +12,7 @@ from mqtt.listener import (
     LED_TOGGLE_STATUS,
 )
 
-
+# trial comment
 def home(request: HttpRequest, *args, **kwargs):
     context = {
         "switch_action": SWITCH_ACTION_TYPE,
